@@ -1,6 +1,6 @@
 import csv
 import math
-
+from src.config import path
 class Item:
     """
     Класс для представления товара в магазине.
@@ -19,11 +19,13 @@ class Item:
         self.price = price
         self.quantity = quantity
 
-    @property
-    def name(self):
-        return self.__name
+    def __repr__(self):
+        return f'{self.__class__.__name__}(\'{self.__name}\', {self.price}, {self.quantity})'
 
-    @name.getter
+    def __str__(self):
+        return f'{self.name}'
+
+    @property
     def name(self):
         return self.__name
 
@@ -31,13 +33,12 @@ class Item:
     def name(self, name):
         if len(name) > 10:
             self.__name = name[:10]
-            return self.__name
-        self.__name = name
-        return self.__name
+        else:
+            self.__name = name
 
     @classmethod
     def instantiate_from_csv(cls):
-        with open('../src/items.csv', newline='', encoding='windows-1251') as f:
+        with open(path, newline='', encoding='windows-1251') as f:
             reader = csv.reader(f)
             for row in reader:
                 name, price, quantity = row
