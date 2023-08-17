@@ -25,7 +25,7 @@ class Item:
         Item.all.append(self)
 
     def __repr__(self):
-        return f'{self.__class__.__name__}(\'{self.__name}\', {round(self.price)}, {self.quantity})'
+        return f'{self.__class__.__name__}(\'{self.name}\', {round(self.price)}, {self.quantity})'
 
     def __str__(self):
         return f'{self.name}'
@@ -68,3 +68,7 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price = self.price * Item.pay_rate
+
+    def __add__(self, other):
+        if isinstance(other, (Item)):
+            return self.quantity + other.quantity
