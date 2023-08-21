@@ -1,6 +1,12 @@
 import csv
 import math
 from src.config import path
+import os.path
+
+class InstantiateCSVError(Exception):
+
+    def __init__(self, *args, **kwargs):
+        self.message = f'Файл {path} поврежден'
 
 
 class Item:
@@ -43,14 +49,24 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls):
-        Item.all.clear()
-        with open(path, newline='', encoding='windows-1251') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                name = row['name']
-                price = row['price']
-                quantity = row['quantity']
-                cls(name, price, quantity)
+        try:
+
+            Item.all.clear()
+            with open(path, newline='', encoding='windows-1251') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if len(row) != 3:
+                        raise InstantiateCSVError
+                    name = row['name']
+                    price = row['price']
+                    quantity = row['quantity']
+                    cls(name, price, quantity)
+        except FileNotFoundError:
+            print('Отсутствует файл item.csv')
+
+        except InstantiateCSVError as ex:
+            print(ex.message)
+
 
     @staticmethod
     def string_to_number(str_num):
